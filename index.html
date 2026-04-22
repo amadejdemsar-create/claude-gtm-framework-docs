@@ -931,6 +931,130 @@
       .step-num { width: 48px; height: 48px; font-size: 18px; }
       .step-list::before { display: none; }
     }
+
+    /* ============ INSTALL BAR ============ */
+    .install-bar {
+      background: linear-gradient(180deg, rgba(10, 23, 52, 0.96), rgba(7, 16, 37, 0.96));
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 22px 26px;
+      margin: 28px 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .install-bar-text { flex: 1; min-width: 260px; }
+    .install-bar-text h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+    .install-bar-text p { color: var(--text-dim); font-size: 14px; margin: 0; }
+    .btn-install {
+      background: linear-gradient(135deg, var(--m3), var(--m4));
+      color: #ffffff;
+      border: 1px solid rgba(123, 202, 237, 0.4);
+      padding: 13px 26px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      font-family: inherit;
+      box-shadow: 0 6px 18px rgba(0, 103, 178, 0.3);
+    }
+    .btn-install:hover {
+      background: linear-gradient(135deg, var(--m4), var(--m5));
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(0, 156, 222, 0.36);
+    }
+    .btn-install:active { transform: translateY(0); }
+    .btn-install.success { background: var(--green); color: #ffffff; box-shadow: 0 6px 18px rgba(54, 160, 88, 0.3); }
+    .btn-install.error { background: var(--red); color: #ffffff; }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-dim);
+      border: 1px solid var(--border-strong);
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary:hover { color: var(--text); border-color: var(--m5); }
+
+    /* ============ MODAL (install prompt preview) ============ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 9, 22, 0.88);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 20px;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: linear-gradient(180deg, rgba(10, 23, 52, 0.98), rgba(7, 16, 37, 0.98));
+      border: 1px solid var(--border-strong);
+      border-radius: 18px;
+      max-width: 820px;
+      width: 100%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+    }
+    .modal-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-header h3 { font-size: 17px; font-weight: 700; margin: 0; color: var(--text); }
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 26px;
+      cursor: pointer;
+      padding: 0 4px;
+      font-weight: 300;
+      line-height: 1;
+    }
+    .modal-close:hover { color: var(--text); }
+    .modal-body { padding: 22px 24px; overflow-y: auto; flex: 1; }
+    .modal-body > p { color: var(--text-dim); font-size: 14px; margin-bottom: 14px; }
+    .modal pre {
+      background: rgba(3, 9, 22, 0.85);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--text-dim);
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+    }
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    @media (max-width: 1100px) {
+      .install-bar { flex-direction: column; align-items: stretch; }
+      .btn-install, .btn-secondary { width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -990,6 +1114,15 @@
             session. Product specifics live in a per-campaign folder, so the same framework drives any number of products
             without duplication.
           </p>
+
+          <div class="install-bar">
+            <div class="install-bar-text">
+              <h3>Install the framework on this machine</h3>
+              <p>Copies a Claude Code prompt to your clipboard. Paste it into a new Claude Code session; Claude clones the framework, audits your existing MCPs, installs what is missing, and registers your first campaign.</p>
+            </div>
+            <button class="btn-install" id="install-btn" onclick="copyInstallPrompt()">Copy install prompt</button>
+            <button class="btn-secondary" onclick="showModal()">Preview prompt</button>
+          </div>
 
           <div class="tldr-grid">
             <div class="tldr-card">
@@ -1761,5 +1894,241 @@ open -a "Claude Code"</code></pre>
       if (e.key === "Escape" && archLightbox && archLightbox.classList.contains("open")) closeLightbox();
     });
   </script>
+
+  <!-- ============ INSTALL PROMPT MODAL ============ -->
+  <div class="modal-overlay" id="installModal" onclick="if(event.target===this)hideModal()">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Install prompt</h3>
+        <button class="modal-close" onclick="hideModal()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Copy this prompt and paste it into a fresh Claude Code session. Claude will audit your environment, install any missing MCPs, clone the framework, copy agents and skills into <code>~/.claude/</code>, and register your first campaign. It pauses for confirmation at every key decision.</p>
+        <pre id="prompt-text"></pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="hideModal()">Close</button>
+        <button class="btn-install" onclick="copyInstallPrompt(); hideModal();">Copy to clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // The install prompt that gets copied to clipboard.
+    // When pasted into a new Claude Code session, Claude will execute these instructions.
+    const INSTALL_PROMPT = `I want to install the Claude GTM Framework on this machine.
+
+The Claude GTM Framework is a reproducible outbound system for Claude Code: 7 specialist agents, 8 slash commands, and 4 MCP integrations covering Apollo, Instantly, Attio, and HeyReach. The framework source repo is at https://github.com/amadejdemsar-create/claude-gtm-framework. This repo is PRIVATE and requires collaborator access. If I am not yet a collaborator, cloning will 404 and we will stop to request access from Amadej.
+
+Follow these steps. CONFIRM WITH ME at every key decision point. Do not guess paths or proceed silently.
+
+== STEP 1: PRE-FLIGHT CHECKS ==
+
+Verify this machine is ready. For each, report ok or not found:
+  - Claude Code is installed (check ~/.claude.json exists)
+  - git is on PATH
+  - node is on PATH (needed for Apollo community MCP)
+  - jq is on PATH
+  - npx is on PATH (needed for HeyReach mcp-remote)
+
+If any prerequisite is missing, stop and tell me how to install it, then wait.
+
+== STEP 2: CLONE the framework ==
+
+Clone into /tmp. We will copy files into ~/.claude/ later, so we do not need a permanent checkout.
+
+    rm -rf /tmp/claude-gtm-framework
+    git clone https://github.com/amadejdemsar-create/claude-gtm-framework.git /tmp/claude-gtm-framework
+
+If the clone fails with 404 or auth error, STOP. Tell me: "Ask Amadej to add your GitHub username as a collaborator on amadejdemsar-create/claude-gtm-framework, accept the invitation at https://github.com/amadejdemsar-create/claude-gtm-framework/invitations, then re-run this prompt." Do not continue.
+
+On success, show me what was cloned:
+    ls /tmp/claude-gtm-framework/agents
+    ls /tmp/claude-gtm-framework/skills
+    ls /tmp/claude-gtm-framework/gtm-framework
+
+== STEP 3: AUDIT existing MCPs ==
+
+Read my current Claude Code MCPs:
+    jq '.mcpServers | keys' ~/.claude.json
+
+The 4 MCPs the framework needs are: apollo-io, instantly, attio, heyreach. Present a table:
+
+    | MCP       | Present? | Action        |
+    |-----------|----------|---------------|
+    | apollo-io | ...      | install / keep |
+    | instantly | ...      | install / keep |
+    | attio     | ...      | install / keep |
+    | heyreach  | ...      | install / keep |
+
+Also list every OTHER MCP I already have so we do not disturb them.
+
+Ask me: "Does this audit look correct? Should we proceed with installing the missing MCPs?" Wait for my confirmation.
+
+== STEP 4: INSTALL missing MCPs ==
+
+For each missing MCP, walk through setup. Ask me for API keys or URLs as we go. Never hardcode placeholders.
+
+4a. Apollo (Chainscore community MCP, STDIO):
+
+    mkdir -p ~/.claude/mcp-servers
+    cd ~/.claude/mcp-servers
+    rm -rf apollo-io-mcp
+    git clone https://github.com/Chainscore/apollo-io-mcp.git
+    cd apollo-io-mcp && npm install && npm run build
+
+Ask me for my Apollo API key (Settings > Integrations > API in Apollo). Then add to ~/.claude.json via jq (safe atomic write):
+
+    jq '.mcpServers["apollo-io"] = {"type":"stdio","command":"node","args":["'$HOME'/.claude/mcp-servers/apollo-io-mcp/dist/index.js"],"env":{"APOLLO_API_KEY":"<KEY>"}}' ~/.claude.json > /tmp/cc.json && mv /tmp/cc.json ~/.claude.json
+
+4b. Instantly (official MCP, HTTP):
+
+Ask for Instantly API key (Settings > Integrations > API Keys). Then:
+
+    jq '.mcpServers["instantly"] = {"type":"http","url":"https://mcp.instantly.ai/mcp","headers":{"Authorization":"<KEY>"}}' ~/.claude.json > /tmp/cc.json && mv /tmp/cc.json ~/.claude.json
+
+4c. Attio (official MCP, HTTP + OAuth):
+
+No key needed at config time. OAuth browser prompt triggers on first connect.
+
+    jq '.mcpServers["attio"] = {"type":"http","url":"https://mcp.attio.com/mcp"}' ~/.claude.json > /tmp/cc.json && mv /tmp/cc.json ~/.claude.json
+
+4d. HeyReach (official MCP, STDIO via mcp-remote):
+
+Ask me for my HeyReach MCP connection URL (Integrations > HeyReach MCP Server in HeyReach; unique per workspace).
+
+    jq '.mcpServers["heyreach"] = {"type":"stdio","command":"npx","args":["-y","mcp-remote","<URL>"]}' ~/.claude.json > /tmp/cc.json && mv /tmp/cc.json ~/.claude.json
+
+After each MCP is added, verify with:
+    jq '.mcpServers | keys' ~/.claude.json
+
+== STEP 5: INSTALL agents, skills, framework docs ==
+
+Copy the framework into ~/.claude/:
+
+    cp /tmp/claude-gtm-framework/agents/*.md ~/.claude/agents/
+    cp -r /tmp/claude-gtm-framework/skills/gtm-* ~/.claude/skills/
+    mkdir -p ~/.claude/gtm-framework
+    cp -r /tmp/claude-gtm-framework/gtm-framework/* ~/.claude/gtm-framework/
+
+Verify counts:
+    ls ~/.claude/agents/ | grep -c '^gtm-'     (expect 7)
+    ls ~/.claude/skills/ | grep -c '^gtm-'     (expect 8)
+    ls ~/.claude/gtm-framework/                (expect README.md, framework-map.md, setup-audit.md, campaign-template/)
+
+== STEP 6: REGISTER the first campaign ==
+
+Ask me: "Do you already have a GTM campaign running in Apollo + Instantly + Attio + HeyReach that we should import, or is this a brand new setup?"
+
+If EXISTING: ask for product name, company, and the tool IDs (Apollo saved search ID, Instantly master campaign ID, HeyReach master campaign ID, Attio pipeline slug). Ask where the campaign config folder should live. Default suggestion: /Users/Shared/<workspace>/<company>/<product>/campaign/. Copy /tmp/claude-gtm-framework/gtm-framework/campaign-template/ to the target path. Walk me through filling each file: icp.md, pricing.md, reply-playbook.md, pipeline-stages.md. Write tool IDs into config.json. Skip email-copy.md and linkedin-copy.md for now; /gtm-write-copy generates them in step 9.
+
+If NEW: same walkthrough, expect placeholders where I do not yet have assets.
+
+Register in ~/.claude/gtm-campaigns.json under .campaigns.<slug> with {path, status: "pre_launch", created}. If this is the first campaign registered, set .default to this slug.
+
+== STEP 7: RESTART Claude Code ==
+
+Tell me: "Restart Claude Code now so the 4 MCPs and the new agents and skills load. When you come back, we run verification."
+
+STOP. Wait for me to confirm I restarted before continuing.
+
+== STEP 8: VERIFY MCP connections ==
+
+After restart, in a fresh Claude Code session, verify each MCP responds:
+  - "list my Apollo saved searches"
+  - "list my Instantly campaigns"
+  - "list my Attio workspaces"  (will trigger OAuth browser on first call)
+  - "list my HeyReach campaigns"
+
+If any fails, diagnose its specific config in ~/.claude.json and fix before continuing.
+
+== STEP 9: GENERATE first-draft copy ==
+
+Run the copy generation skill:
+
+    /gtm-write-copy <slug>
+
+This delegates to gtm-email-writer (4-email sequence from ICP + pricing) and gtm-linkedin-writer (connection note + Day 4 + Day 9). Accept, revise, or skip each draft. On accept, files are written.
+
+== STEP 10: LAUNCH CHECK ==
+
+Run the launch verification:
+
+    /gtm-launch-check <slug>
+
+This verifies every moving part against live data: MCP connections, Apollo saved search returns results, Instantly mailbox warmup, HeyReach master campaign exists, Attio pipeline stages match, copy is complete. Any failures come with a specific fix.
+
+Common remaining tasks at this step: create the master Instantly email campaign in the Instantly UI using the email copy, create the master HeyReach LinkedIn campaign in the HeyReach UI using the LinkedIn copy, paste those campaign IDs into the campaign's config.json.
+
+== STEP 11: HANDOVER ==
+
+Print:
+    "Setup complete for campaign <slug>.
+
+     Installed:
+       - 4 MCP servers (Apollo, Instantly, Attio, HeyReach)
+       - 7 agents in ~/.claude/agents/
+       - 8 skills as slash commands
+       - Framework docs in ~/.claude/gtm-framework/
+       - Campaign config at <path>
+
+     Next steps:
+       1. Resolve any launch-check failures (master campaigns in tool UIs, warm domains, fill any skipped ICP or pricing fields).
+       2. Once /gtm-launch-check passes green, run /gtm-weekly-batch <slug> to pull and send the first batch.
+       3. Run /gtm-daily-ops every morning to clear replies.
+       4. Run /gtm-pipeline-review weekly to spot stuck deals.
+       5. Re-run /gtm-write-copy <slug> any time you want to regenerate email or LinkedIn copy.
+       6. Full documentation: https://amadejdemsar-create.github.io/claude-gtm-framework-docs/"
+
+Start with step 1.`;
+
+    async function copyInstallPrompt() {
+      const btn = document.getElementById('install-btn');
+      const original = btn.textContent;
+
+      try {
+        await navigator.clipboard.writeText(INSTALL_PROMPT);
+        btn.textContent = 'Copied';
+        btn.classList.add('success');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('success');
+        }, 2500);
+      } catch (err) {
+        const ta = document.createElement('textarea');
+        ta.value = INSTALL_PROMPT;
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          btn.textContent = 'Copied';
+          btn.classList.add('success');
+        } catch {
+          btn.textContent = 'Copy failed';
+          btn.classList.add('error');
+        }
+        document.body.removeChild(ta);
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('success', 'error');
+        }, 2500);
+      }
+    }
+
+    function showModal() {
+      document.getElementById('prompt-text').textContent = INSTALL_PROMPT;
+      document.getElementById('installModal').classList.add('show');
+    }
+    function hideModal() {
+      document.getElementById('installModal').classList.remove('show');
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const m = document.getElementById('installModal');
+        if (m && m.classList.contains('show')) hideModal();
+      }
+    });
+  </script>
+
 </body>
 </html>
