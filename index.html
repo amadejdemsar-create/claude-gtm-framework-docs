@@ -3,55 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#050d1e">
+  <meta name="theme-color" content="#000126">
   <title>Claude GTM Framework · Onboarding Explainer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/primeicons/primeicons.css">
+  <noscript><style>.reveal { opacity: 1; transform: none; }</style></noscript>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #050d1e;
-      --bg-soft: #09152d;
-      --panel: rgba(9, 21, 45, 0.96);
-      --panel-strong: #0d1c3e;
-      --panel-hover: #122653;
+      /* Primary brand palette */
+      --nevron-color-m1: #000126;
+      --nevron-color-m2: #002391;
+      --nevron-color-m3: #1B92FF;
+      --nevron-color-m4: #73C7FF;
+      --nevron-color-m5: #C3E9FF;
+      --nevron-color-white: #FFFFFF;
+
+      /* Supporting */
+      --nevron-color-green: #36A058;
+      --nevron-color-yellow: #F6A900;
+      --nevron-color-orange: #E56600;
+      --nevron-color-red: #DA2025;
+
+      /* Dark-theme surface aliases (page-local, composed from M1/M2) */
+      --n-bg: var(--nevron-color-m1);
+      --n-panel: color-mix(in srgb, var(--nevron-color-m2) 12%, var(--nevron-color-m1));
+      --n-panel-strong: color-mix(in srgb, var(--nevron-color-m2) 22%, var(--nevron-color-m1));
+      --n-panel-hover: color-mix(in srgb, var(--nevron-color-m2) 30%, var(--nevron-color-m1));
+      --n-border: rgba(27, 146, 255, 0.14);
+      --n-border-strong: rgba(27, 146, 255, 0.28);
+      --n-glow: rgba(27, 146, 255, 0.12);
+
+      /* Text */
+      --n-text: var(--nevron-color-white);
+      --n-text-dim: var(--nevron-color-m5);
+      --n-text-muted: #8ea2bb;
+
+      /* Motion */
+      --nevron-transition-fast: 150ms ease;
+      --nevron-transition-base: 250ms ease;
+      --nevron-transition-slow: 350ms ease;
+
+      /* Typography */
+      --nevron-font-family: 'Open Sans', 'Neue Haas Unica', 'Helvetica Neue', Arial, sans-serif;
+      --nevron-font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+      /* Short aliases pointing to canonical tokens */
+      --bg: var(--nevron-color-m1);
+      --bg-soft: var(--n-panel);
+      --panel: var(--n-panel);
+      --panel-strong: var(--n-panel-strong);
+      --panel-hover: var(--n-panel-hover);
       --surface-light: rgba(225, 244, 255, 0.06);
-      --border: rgba(123, 202, 237, 0.14);
-      --border-strong: rgba(123, 202, 237, 0.28);
-      --text: #eef6ff;
-      --text-dim: #bfd0e3;
+      --border: var(--n-border);
+      --border-strong: var(--n-border-strong);
+      --text: var(--nevron-color-white);
+      --text-dim: var(--nevron-color-m5);
       --text-muted: #8ea2bb;
-      --m2: #00317a;
-      --m3: #0067b2;
-      --m4: #009cde;
-      --m5: #7bcaed;
-      --green: #36a058;
+      --m2: var(--nevron-color-m2);
+      --m3: var(--nevron-color-m3);
+      --m4: var(--nevron-color-m4);
+      --m5: var(--nevron-color-m5);
+      --green: var(--nevron-color-green);
       --green-soft: rgba(54, 160, 88, 0.16);
-      --yellow: #f6a900;
+      --yellow: var(--nevron-color-yellow);
       --yellow-soft: rgba(246, 169, 0, 0.16);
-      --orange: #e56600;
+      --orange: var(--nevron-color-orange);
       --orange-soft: rgba(229, 102, 0, 0.16);
-      --magenta: #a5348a;
-      --magenta-soft: rgba(165, 52, 138, 0.18);
-      --red: #da2025;
+      --red: var(--nevron-color-red);
       --red-soft: rgba(218, 32, 37, 0.16);
-      --cyan: #0c8599;
-      --cyan-soft: rgba(12, 133, 153, 0.18);
       --shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
-      --radius: 18px;
+      --radius: 0;
       --sidebar-w: 290px;
-      --mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
+      --mono: var(--nevron-font-mono);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: "Inter", "Neue Haas Unica", "Helvetica Neue", Arial, sans-serif;
-      background:
-        radial-gradient(circle at 18% 10%, rgba(0, 103, 178, 0.12), transparent 28%),
-        linear-gradient(180deg, #030916 0%, #081426 42%, #071120 100%);
+      font-family: var(--nevron-font-family);
+      background: radial-gradient(ellipse at 18% 10%, color-mix(in srgb, var(--nevron-color-m3) 20%, var(--nevron-color-m1)) 0%, var(--nevron-color-m1) 60%);
       color: var(--text);
       line-height: 1.65;
       overflow-x: hidden;
@@ -62,18 +96,30 @@
     strong { color: var(--text); font-weight: 600; }
     ul, ol { padding-left: 18px; }
     li { color: var(--text-dim); margin-bottom: 8px; }
-    h1, h2, h3, h4 {
-      font-family: "Inter", "Neue Haas Unica", "Helvetica Neue", Arial, sans-serif;
-      line-height: 1.08;
+    h1 {
+      font-family: var(--nevron-font-family);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+    }
+    h2 {
+      font-family: var(--nevron-font-family);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+    }
+    h3, h4 {
+      font-family: var(--nevron-font-family);
+      line-height: 1.25;
       letter-spacing: -0.02em;
       font-weight: 700;
     }
     code, pre, kbd { font-family: var(--mono); font-size: 13px; }
-    code { background: rgba(123, 202, 237, 0.08); padding: 2px 6px; border-radius: 4px; color: var(--m5); }
+    code { background: rgba(27, 146, 255, 0.08); padding: 2px 6px; border-radius: 0; color: var(--m5); }
     pre {
       background: rgba(3, 9, 22, 0.8);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 0;
       padding: 18px 20px;
       overflow-x: auto;
       margin: 14px 0 18px;
@@ -128,7 +174,7 @@
     .nav-group { margin-top: 20px; }
     .nav-label {
       font-size: 10px;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--text-muted);
@@ -139,23 +185,23 @@
     .nav-link {
       display: block;
       padding: 9px 12px;
-      border-radius: 10px;
+      border-radius: 0;
       color: var(--text-dim);
       font-size: 13px;
       font-weight: 500;
       border: 1px solid transparent;
-      transition: color 220ms ease, background 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+      transition: color var(--nevron-transition-base), background var(--nevron-transition-base), border-color var(--nevron-transition-base), box-shadow var(--nevron-transition-base);
     }
     .nav-link:hover {
       color: var(--text);
-      background: rgba(0, 103, 178, 0.14);
-      border-color: rgba(123, 202, 237, 0.2);
+      background: rgba(27, 146, 255, 0.14);
+      border-color: rgba(27, 146, 255, 0.2);
     }
     .nav-link.active {
       color: var(--text);
-      background: rgba(0, 103, 178, 0.18);
-      border-color: rgba(123, 202, 237, 0.24);
-      box-shadow: 0 0 12px rgba(0, 156, 222, 0.10);
+      background: rgba(27, 146, 255, 0.18);
+      border-color: rgba(27, 146, 255, 0.24);
+      box-shadow: 0 0 12px rgba(115, 199, 255, 0.10);
     }
 
     /* ---- Content ---- */
@@ -167,12 +213,12 @@
       position: relative;
       overflow: hidden;
       border: 1px solid var(--border);
-      border-radius: 26px;
+      border-radius: 0;
       padding: 56px 48px 48px;
-      background: linear-gradient(135deg, rgba(0, 49, 122, 0.96), rgba(7, 21, 45, 0.98));
+      background: radial-gradient(ellipse at top left, color-mix(in srgb, var(--nevron-color-m3) 40%, var(--nevron-color-m1)), var(--nevron-color-m1));
       box-shadow:
         var(--shadow),
-        inset 0 1px 0 rgba(123, 202, 237, 0.08);
+        inset 0 1px 0 rgba(27, 146, 255, 0.08);
       margin-bottom: 28px;
     }
 
@@ -185,7 +231,7 @@
       width: 320px;
       height: 320px;
       border-radius: 999px;
-      background: radial-gradient(circle, rgba(0, 156, 222, 0.14), transparent 70%);
+      background: radial-gradient(circle, rgba(115, 199, 255, 0.14), transparent 70%);
       pointer-events: none;
     }
 
@@ -197,7 +243,7 @@
       left: 48px;
       right: 48px;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(123, 202, 237, 0.22), transparent);
+      background: linear-gradient(90deg, transparent, rgba(27, 146, 255, 0.22), transparent);
       pointer-events: none;
     }
 
@@ -208,12 +254,12 @@
       padding: 7px 14px;
       border-radius: 999px;
       font-size: 11px;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--m5);
       background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(123, 202, 237, 0.18);
+      border: 1px solid rgba(27, 146, 255, 0.18);
       margin-bottom: 24px;
     }
     .eyebrow::before {
@@ -222,14 +268,14 @@
       height: 8px;
       border-radius: 999px;
       background: linear-gradient(135deg, var(--m4), var(--m5));
-      box-shadow: 0 0 12px rgba(123, 202, 237, 0.45);
+      box-shadow: 0 0 12px rgba(27, 146, 255, 0.45);
     }
     .hero h1 {
       font-size: clamp(40px, 5.4vw, 66px);
       margin-bottom: 22px;
       max-width: 900px;
-      font-weight: 800;
-      line-height: 1.04;
+      font-weight: 700;
+      line-height: 1.1;
     }
     .gradient-text { color: var(--m5); }
     .hero p.lead {
@@ -248,18 +294,18 @@
     }
     .tldr-card {
       padding: 18px;
-      border-radius: 16px;
+      border-radius: 0;
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(123, 202, 237, 0.16);
-      transition: background 280ms ease, border-color 280ms ease;
+      border: 1px solid rgba(27, 146, 255, 0.16);
+      transition: background var(--nevron-transition-base), border-color var(--nevron-transition-base);
     }
     .tldr-card:hover {
       background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(123, 202, 237, 0.28);
+      border-color: rgba(27, 146, 255, 0.28);
     }
     .tldr-num {
       font-size: 11px;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--m5);
@@ -280,14 +326,14 @@
     }
     .stat {
       padding: 20px;
-      border-radius: 16px;
+      border-radius: 0;
       background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(123, 202, 237, 0.14);
+      border: 1px solid rgba(27, 146, 255, 0.14);
     }
     .stat-num {
-      font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+      font-family: var(--nevron-font-family);
       font-size: 32px;
-      font-weight: 800;
+      font-weight: 700;
       color: var(--text);
       margin-bottom: 4px;
       font-variant-numeric: tabular-nums;
@@ -309,29 +355,26 @@
       left: 0;
       right: 0;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(123, 202, 237, 0.16), transparent);
+      background: linear-gradient(90deg, transparent, rgba(27, 146, 255, 0.16), transparent);
     }
     .section-header { margin-bottom: 28px; max-width: 880px; }
     .section-tag {
       display: inline-block;
       padding: 5px 12px;
-      border-radius: 999px;
+      border-radius: 0.25rem;
       font-size: 10px;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       margin-bottom: 14px;
       color: var(--m5);
-      background: rgba(0, 103, 178, 0.12);
-      border: 1px solid rgba(123, 202, 237, 0.16);
+      background: rgba(27, 146, 255, 0.12);
+      border: 1px solid rgba(27, 146, 255, 0.16);
     }
-    .section-tag.tag-green { color: #90dfab; background: var(--green-soft); border-color: rgba(54, 160, 88, 0.22); }
-    .section-tag.tag-red { color: #ff9196; background: var(--red-soft); border-color: rgba(218, 32, 37, 0.22); }
-    .section-tag.tag-yellow { color: #ffd76a; background: var(--yellow-soft); border-color: rgba(246, 169, 0, 0.28); }
     .section-header h2 {
       font-size: clamp(28px, 3.8vw, 42px);
       margin-bottom: 14px;
-      line-height: 1.1;
+      line-height: 1.2;
     }
     .section-header p {
       font-size: 16px;
@@ -349,10 +392,10 @@
     .card {
       background: linear-gradient(180deg, rgba(10, 23, 52, 0.96), rgba(7, 16, 37, 0.96));
       border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border-radius: 0;
       padding: 22px;
       box-shadow: var(--shadow);
-      transition: transform 280ms ease, border-color 280ms ease, background 280ms ease;
+      transition: transform var(--nevron-transition-base), border-color var(--nevron-transition-base), background var(--nevron-transition-base);
     }
     .card:hover {
       transform: translateY(-2px);
@@ -361,7 +404,7 @@
     }
     .card-label {
       font-size: 10px;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--m5);
@@ -374,9 +417,9 @@
     .callout {
       margin-top: 18px;
       padding: 18px 20px;
-      border-radius: 16px;
-      border: 1px solid rgba(123, 202, 237, 0.16);
-      background: linear-gradient(180deg, rgba(0, 103, 178, 0.12), rgba(0, 103, 178, 0.05));
+      border-radius: 0;
+      border: 1px solid rgba(27, 146, 255, 0.16);
+      background: linear-gradient(180deg, rgba(27, 146, 255, 0.12), rgba(27, 146, 255, 0.05));
     }
     .callout.warn {
       border-color: rgba(246, 169, 0, 0.28);
@@ -391,7 +434,7 @@
 
     /* ---- Table ---- */
     .table-wrap {
-      border-radius: 18px;
+      border-radius: 0;
       border: 1px solid var(--border);
       overflow: hidden;
       box-shadow: var(--shadow);
@@ -401,12 +444,12 @@
     th, td {
       padding: 14px 16px;
       text-align: left;
-      border-bottom: 1px solid rgba(123, 202, 237, 0.08);
+      border-bottom: 1px solid rgba(27, 146, 255, 0.08);
       vertical-align: top;
     }
     th {
       font-size: 11px;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--m5);
@@ -419,11 +462,11 @@
     .agent-card {
       position: relative;
       padding: 24px;
-      border-radius: 18px;
+      border-radius: 0;
       border: 1px solid var(--border);
       background: linear-gradient(180deg, rgba(10, 23, 52, 0.96), rgba(7, 16, 37, 0.96));
       overflow: hidden;
-      transition: transform 280ms ease, border-color 280ms ease, box-shadow 280ms ease;
+      transition: transform var(--nevron-transition-base), border-color var(--nevron-transition-base), box-shadow var(--nevron-transition-base);
     }
 
     /* Colored glow that bleeds into the top-left corner */
@@ -436,7 +479,7 @@
       height: 120px;
       border-radius: 999px;
       opacity: 0.5;
-      transition: opacity 400ms ease;
+      transition: opacity var(--nevron-transition-slow);
       pointer-events: none;
     }
     .agent-card:hover::before { opacity: 0.75; }
@@ -453,14 +496,14 @@
     .agent-card.agent-instantly::before { background: radial-gradient(circle, rgba(246, 169, 0, 0.4), transparent 70%); }
     .agent-card.agent-instantly:hover { border-color: rgba(246, 169, 0, 0.3); }
 
-    .agent-card.agent-heyreach::before { background: radial-gradient(circle, rgba(0, 156, 222, 0.4), transparent 70%); }
-    .agent-card.agent-heyreach:hover { border-color: rgba(0, 156, 222, 0.3); }
+    .agent-card.agent-heyreach::before { background: radial-gradient(circle, rgba(115, 199, 255, 0.4), transparent 70%); }
+    .agent-card.agent-heyreach:hover { border-color: rgba(115, 199, 255, 0.3); }
 
-    .agent-card.agent-attio::before { background: radial-gradient(circle, rgba(165, 52, 138, 0.4), transparent 70%); }
-    .agent-card.agent-attio:hover { border-color: rgba(165, 52, 138, 0.3); }
+    .agent-card.agent-attio::before { background: radial-gradient(circle, rgba(0, 35, 145, 0.4), transparent 70%); }
+    .agent-card.agent-attio:hover { border-color: rgba(0, 35, 145, 0.3); }
 
-    .agent-card.agent-orchestrator::before { background: radial-gradient(circle, rgba(12, 133, 153, 0.4), transparent 70%); }
-    .agent-card.agent-orchestrator:hover { border-color: rgba(12, 133, 153, 0.3); }
+    .agent-card.agent-orchestrator::before { background: radial-gradient(circle, rgba(115, 199, 255, 0.4), transparent 70%); }
+    .agent-card.agent-orchestrator:hover { border-color: rgba(115, 199, 255, 0.3); }
 
     .agent-head {
       position: relative;
@@ -476,9 +519,9 @@
     }
     .agent-dot.apollo { background: #36a058; box-shadow: 0 0 14px rgba(54, 160, 88, 0.55); }
     .agent-dot.instantly { background: #f6a900; box-shadow: 0 0 14px rgba(246, 169, 0, 0.55); }
-    .agent-dot.heyreach { background: #009cde; box-shadow: 0 0 14px rgba(0, 156, 222, 0.55); }
-    .agent-dot.attio { background: #a5348a; box-shadow: 0 0 14px rgba(165, 52, 138, 0.55); }
-    .agent-dot.orchestrator { background: #0c8599; box-shadow: 0 0 14px rgba(12, 133, 153, 0.55); }
+    .agent-dot.heyreach { background: var(--nevron-color-m4); box-shadow: 0 0 14px rgba(115, 199, 255, 0.55); }
+    .agent-dot.attio { background: var(--nevron-color-m2); box-shadow: 0 0 14px rgba(0, 35, 145, 0.55); }
+    .agent-dot.orchestrator { background: var(--nevron-color-m4); box-shadow: 0 0 14px rgba(115, 199, 255, 0.55); }
 
     .agent-name { font-family: var(--mono); font-size: 16px; color: var(--text); font-weight: 600; }
     .agent-role { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; position: relative; z-index: 1; }
@@ -491,23 +534,23 @@
     .tag {
       display: inline-block;
       padding: 4px 10px;
-      border-radius: 999px;
+      border-radius: 0.25rem;
       font-size: 11px;
       font-weight: 600;
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(123, 202, 237, 0.14);
+      border: 1px solid rgba(27, 146, 255, 0.14);
       color: var(--text-dim);
     }
     .tag.gate { color: #ff9196; background: var(--red-soft); border-color: rgba(218, 32, 37, 0.22); }
-    .tag.hub { color: #f3c2e9; background: var(--magenta-soft); border-color: rgba(165, 52, 138, 0.28); }
+    .tag.hub { color: var(--nevron-color-m5); background: rgba(0, 35, 145, 0.18); border-color: rgba(0, 35, 145, 0.28); }
 
     /* ---- Skill cards ---- */
     .skill-card {
       padding: 22px;
-      border-radius: 18px;
+      border-radius: 0;
       border: 1px solid var(--border);
       background: linear-gradient(180deg, rgba(10, 23, 52, 0.96), rgba(7, 16, 37, 0.96));
-      transition: transform 280ms ease, border-color 280ms ease;
+      transition: transform var(--nevron-transition-base), border-color var(--nevron-transition-base);
     }
     .skill-card:hover { transform: translateY(-2px); border-color: var(--border-strong); }
     .skill-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
@@ -518,7 +561,7 @@
       font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em;
       font-weight: 700;
       padding: 3px 10px;
-      border-radius: 999px;
+      border-radius: 0.25rem;
       display: inline-block;
     }
     .cadence-daily {
@@ -528,8 +571,8 @@
     }
     .cadence-weekly {
       color: var(--m5);
-      background: rgba(0, 103, 178, 0.12);
-      border: 1px solid rgba(123, 202, 237, 0.2);
+      background: rgba(27, 146, 255, 0.12);
+      border: 1px solid rgba(27, 146, 255, 0.2);
     }
     .cadence-once {
       color: #ffd76a;
@@ -539,13 +582,13 @@
     .cadence-adhoc {
       color: var(--text-muted);
       background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(123, 202, 237, 0.12);
+      border: 1px solid rgba(27, 146, 255, 0.12);
     }
 
     .skill-example {
       margin-top: 14px;
       padding: 12px 14px;
-      border-radius: 10px;
+      border-radius: 0;
       background: rgba(3, 9, 22, 0.6);
       border: 1px solid var(--border);
       font-family: var(--mono);
@@ -556,17 +599,17 @@
     /* ---- Architecture image ---- */
     .architecture-wrap {
       position: relative;
-      border-radius: 20px;
+      border-radius: 0;
       border: 1px solid var(--border);
       overflow: hidden;
       box-shadow: var(--shadow);
       margin-top: 12px;
       background: linear-gradient(180deg, rgba(10, 23, 52, 0.96), rgba(7, 16, 37, 0.96));
-      transition: border-color 280ms ease, box-shadow 280ms ease;
+      transition: border-color var(--nevron-transition-base), box-shadow var(--nevron-transition-base);
     }
     .architecture-wrap:hover {
       border-color: var(--border-strong);
-      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(123, 202, 237, 0.12);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(27, 146, 255, 0.12);
     }
     .architecture-image {
       display: block;
@@ -585,7 +628,7 @@
       padding: 6px 12px;
       border-radius: 999px;
       background: rgba(3, 9, 22, 0.85);
-      border: 1px solid rgba(123, 202, 237, 0.22);
+      border: 1px solid rgba(27, 146, 255, 0.22);
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.12em;
@@ -594,7 +637,7 @@
       pointer-events: none;
       opacity: 0;
       transform: translateY(-4px);
-      transition: opacity 220ms ease, transform 220ms ease;
+      transition: opacity var(--nevron-transition-fast), transform var(--nevron-transition-fast);
       backdrop-filter: blur(8px);
     }
     .architecture-wrap:hover .architecture-hint {
@@ -606,7 +649,7 @@
     .lightbox {
       position: fixed;
       inset: 0;
-      z-index: 200;
+      z-index: 300;
       background: rgba(3, 9, 22, 0.94);
       backdrop-filter: blur(12px);
       display: none;
@@ -620,7 +663,7 @@
     .lightbox img {
       max-width: 100%;
       max-height: 100%;
-      border-radius: 12px;
+      border-radius: 0;
       border: 1px solid var(--border);
       box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
     }
@@ -637,10 +680,10 @@
       border: 1px solid var(--border-strong);
       color: var(--text);
       cursor: pointer;
-      font-size: 22px;
-      font-weight: 300;
+      font-size: 18px;
+      font-weight: 400;
       line-height: 1;
-      transition: background 180ms ease;
+      transition: background var(--nevron-transition-fast);
     }
     .lightbox-close:hover { background: var(--panel-hover); }
     @keyframes fadeIn {
@@ -659,9 +702,9 @@
     .architecture-caption .caption-icon {
       width: 16px;
       height: 16px;
-      border-radius: 4px;
-      background: rgba(123, 202, 237, 0.12);
-      border: 1px solid rgba(123, 202, 237, 0.2);
+      border-radius: 0;
+      background: rgba(27, 146, 255, 0.12);
+      border: 1px solid rgba(27, 146, 255, 0.2);
       display: grid;
       place-items: center;
       flex-shrink: 0;
@@ -686,7 +729,7 @@
       bottom: 28px;
       left: 49px;
       width: 2px;
-      background: linear-gradient(180deg, rgba(123, 202, 237, 0.28), rgba(123, 202, 237, 0.08));
+      background: linear-gradient(180deg, rgba(27, 146, 255, 0.28), rgba(27, 146, 255, 0.08));
       border-radius: 2px;
       pointer-events: none;
     }
@@ -702,16 +745,16 @@
 
     /* Subtle separator between steps (not on first) */
     .step-row + .step-row {
-      border-top: 1px solid rgba(123, 202, 237, 0.06);
+      border-top: 1px solid rgba(27, 146, 255, 0.06);
     }
 
     .step-num {
       display: grid; place-items: center;
       width: 56px; height: 56px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, rgba(0, 103, 178, 0.22), rgba(123, 202, 237, 0.10));
-      border: 1px solid rgba(123, 202, 237, 0.2);
-      font-size: 20px; font-weight: 800; color: var(--m5);
+      border-radius: 0;
+      background: linear-gradient(135deg, rgba(27, 146, 255, 0.22), rgba(27, 146, 255, 0.10));
+      border: 1px solid rgba(27, 146, 255, 0.2);
+      font-size: 20px; font-weight: 700; color: var(--m5);
       position: relative;
       z-index: 2;
     }
@@ -723,7 +766,7 @@
 
     /* Timeline container card */
     .timeline-card {
-      border-radius: 20px;
+      border-radius: 0;
       border: 1px solid var(--border);
       background: linear-gradient(180deg, rgba(10, 23, 52, 0.94), rgba(7, 16, 37, 0.94));
       box-shadow: var(--shadow);
@@ -737,14 +780,14 @@
     }
     .cost-card {
       padding: 20px;
-      border-radius: 16px;
+      border-radius: 0;
       border: 1px solid var(--border);
       background: linear-gradient(180deg, rgba(10, 23, 52, 0.96), rgba(7, 16, 37, 0.96));
-      transition: border-color 280ms ease;
+      transition: border-color var(--nevron-transition-base);
     }
     .cost-card:hover { border-color: var(--border-strong); }
     .cost-num {
-      font-size: 26px; font-weight: 800; color: var(--text);
+      font-size: 26px; font-weight: 700; color: var(--text);
       margin-bottom: 4px;
       font-variant-numeric: tabular-nums;
     }
@@ -754,14 +797,14 @@
     /* Cost breakdown bar */
     .cost-breakdown {
       margin-top: 20px;
-      border-radius: 16px;
+      border-radius: 0;
       border: 1px solid var(--border);
       background: linear-gradient(180deg, rgba(10, 23, 52, 0.96), rgba(7, 16, 37, 0.96));
       padding: 20px 24px;
     }
     .cost-breakdown-label {
       font-size: 10px;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--text-muted);
@@ -769,17 +812,17 @@
     }
     .cost-bar {
       display: flex;
-      border-radius: 8px;
+      border-radius: 0;
       overflow: hidden;
       height: 10px;
       margin-bottom: 14px;
     }
     .cost-bar-segment {
       height: 100%;
-      transition: opacity 280ms ease;
+      transition: opacity var(--nevron-transition-base);
     }
-    .cost-bar-segment:first-child { border-radius: 8px 0 0 8px; }
-    .cost-bar-segment:last-child { border-radius: 0 8px 8px 0; }
+    .cost-bar-segment:first-child { border-radius: 0; }
+    .cost-bar-segment:last-child { border-radius: 0; }
     .cost-bar-legend {
       display: flex;
       gap: 20px;
@@ -801,13 +844,13 @@
     .cost-total {
       margin-top: 20px;
       padding: 22px 24px;
-      border-radius: 16px;
-      border: 1px solid rgba(123, 202, 237, 0.2);
-      background: linear-gradient(135deg, rgba(0, 103, 178, 0.12) 0%, rgba(0, 103, 178, 0.06) 100%);
+      border-radius: 0;
+      border: 1px solid rgba(27, 146, 255, 0.2);
+      background: linear-gradient(135deg, rgba(27, 146, 255, 0.12) 0%, rgba(27, 146, 255, 0.06) 100%);
     }
     .cost-total-num {
       font-size: 34px;
-      font-weight: 800;
+      font-weight: 700;
       color: var(--text);
       margin-bottom: 4px;
       font-variant-numeric: tabular-nums;
@@ -820,10 +863,10 @@
     /* ---- Troubleshooting ---- */
     .troubleshoot-card {
       padding: 22px;
-      border-radius: 18px;
+      border-radius: 0;
       border: 1px solid var(--border);
       background: linear-gradient(180deg, rgba(10, 23, 52, 0.96), rgba(7, 16, 37, 0.96));
-      transition: border-color 280ms ease;
+      transition: border-color var(--nevron-transition-base);
     }
     .troubleshoot-card:hover { border-color: var(--border-strong); }
     .troubleshoot-q {
@@ -851,7 +894,7 @@
     .footer {
       margin-top: 80px;
       padding: 32px 0 0;
-      border-top: 1px solid rgba(123, 202, 237, 0.12);
+      border-top: 1px solid rgba(27, 146, 255, 0.12);
     }
     .footer-grid {
       display: grid;
@@ -860,7 +903,7 @@
     }
     .footer-col-label {
       font-size: 10px;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--text-muted);
@@ -872,15 +915,15 @@
       margin-bottom: 0;
     }
     .footer-col a {
-      color: var(--m5);
+      color: var(--nevron-color-m3);
       text-decoration: none;
-      transition: color 180ms ease;
+      transition: color var(--nevron-transition-fast);
     }
-    .footer-col a:hover { color: var(--text); }
+    .footer-col a:hover { color: var(--nevron-color-m4); }
     .footer-bottom {
       margin-top: 24px;
       padding-top: 18px;
-      border-top: 1px solid rgba(123, 202, 237, 0.06);
+      border-top: 1px solid rgba(27, 146, 255, 0.06);
     }
     .footer-bottom p { font-size: 12px; color: var(--text-muted); margin-bottom: 0; }
 
@@ -895,7 +938,7 @@
         transform: translateX(-100%);
         width: min(86vw, 320px);
         z-index: 50;
-        transition: transform 280ms ease;
+        transition: transform var(--nevron-transition-base);
       }
       .sidebar.open { transform: translateX(0); }
       .content { padding: 24px 18px 100px; }
@@ -913,10 +956,10 @@
       }
       .mobile-bar button {
         appearance: none;
-        border: 1px solid rgba(123, 202, 237, 0.14);
+        border: 1px solid rgba(27, 146, 255, 0.14);
         background: rgba(255, 255, 255, 0.04);
         color: var(--text);
-        border-radius: 12px;
+        border-radius: 0;
         padding: 10px 14px;
         font-weight: 700;
         cursor: pointer;
@@ -936,7 +979,7 @@
     .install-bar {
       background: linear-gradient(180deg, rgba(10, 23, 52, 0.96), rgba(7, 16, 37, 0.96));
       border: 1px solid var(--border-strong);
-      border-radius: 16px;
+      border-radius: 0;
       padding: 22px 26px;
       margin: 28px 0 20px;
       display: flex;
@@ -949,39 +992,39 @@
     .install-bar-text h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
     .install-bar-text p { color: var(--text-dim); font-size: 14px; margin: 0; }
     .btn-install {
-      background: linear-gradient(135deg, var(--m3), var(--m4));
-      color: #ffffff;
-      border: 1px solid rgba(123, 202, 237, 0.4);
+      background: var(--nevron-color-m3);
+      color: var(--nevron-color-white);
+      border: none;
       padding: 13px 26px;
       font-size: 14px;
       font-weight: 700;
       letter-spacing: 0.02em;
-      border-radius: 10px;
+      border-radius: 0;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all var(--nevron-transition-base);
       white-space: nowrap;
       font-family: inherit;
-      box-shadow: 0 6px 18px rgba(0, 103, 178, 0.3);
+      box-shadow: 0 6px 18px rgba(27, 146, 255, 0.3);
     }
     .btn-install:hover {
-      background: linear-gradient(135deg, var(--m4), var(--m5));
-      transform: translateY(-1px);
-      box-shadow: 0 10px 24px rgba(0, 156, 222, 0.36);
+      background: var(--nevron-color-m2);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(27, 146, 255, 0.36);
     }
     .btn-install:active { transform: translateY(0); }
-    .btn-install.success { background: var(--green); color: #ffffff; box-shadow: 0 6px 18px rgba(54, 160, 88, 0.3); }
-    .btn-install.error { background: var(--red); color: #ffffff; }
+    .btn-install.success { background: var(--green); color: var(--nevron-color-white); box-shadow: 0 6px 18px rgba(54, 160, 88, 0.3); }
+    .btn-install.error { background: var(--red); color: var(--nevron-color-white); }
     .btn-secondary {
       background: transparent;
       color: var(--text-dim);
       border: 1px solid var(--border-strong);
-      padding: 12px 20px;
+      padding: 13px 20px;
       font-size: 14px;
       font-weight: 600;
-      border-radius: 10px;
+      border-radius: 0;
       cursor: pointer;
       font-family: inherit;
-      transition: all 0.2s ease;
+      transition: all var(--nevron-transition-base);
     }
     .btn-secondary:hover { color: var(--text); border-color: var(--m5); }
 
@@ -994,14 +1037,14 @@
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 200;
+      z-index: 400;
       padding: 20px;
     }
     .modal-overlay.show { display: flex; }
     .modal {
       background: linear-gradient(180deg, rgba(10, 23, 52, 0.98), rgba(7, 16, 37, 0.98));
       border: 1px solid var(--border-strong);
-      border-radius: 18px;
+      border-radius: 0;
       max-width: 820px;
       width: 100%;
       max-height: 85vh;
@@ -1021,11 +1064,12 @@
       background: transparent;
       border: none;
       color: var(--text-dim);
-      font-size: 26px;
+      font-size: 18px;
       cursor: pointer;
-      padding: 0 4px;
-      font-weight: 300;
+      padding: 4px;
       line-height: 1;
+      display: grid;
+      place-items: center;
     }
     .modal-close:hover { color: var(--text); }
     .modal-body { padding: 22px 24px; overflow-y: auto; flex: 1; }
@@ -1033,7 +1077,7 @@
     .modal pre {
       background: rgba(3, 9, 22, 0.85);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 0;
       padding: 18px;
       font-family: var(--mono);
       font-size: 12px;
@@ -1055,6 +1099,19 @@
       .install-bar { flex-direction: column; align-items: stretch; }
       .btn-install, .btn-secondary { width: 100%; }
     }
+
+    /* ---- Reduced motion ---- */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ---- Focus visible ---- */
+    :focus-visible { outline: 2px solid var(--nevron-color-m4); outline-offset: 2px; }
+    .nav-link:focus-visible { outline: 2px solid var(--nevron-color-m4); outline-offset: 2px; }
+    .modal-close:focus-visible { outline: 2px solid var(--nevron-color-m4); outline-offset: 2px; }
+    .lightbox-close:focus-visible { outline: 2px solid var(--nevron-color-m4); outline-offset: 2px; }
+    #mobileNavToggle:focus-visible { outline: 2px solid var(--nevron-color-m4); outline-offset: 2px; }
+    #archWrap:focus-visible { outline: 2px solid var(--nevron-color-m4); outline-offset: 2px; }
   </style>
 </head>
 <body>
@@ -1231,7 +1288,7 @@
           </div>
 
           <div class="lightbox" id="archLightbox" role="dialog" aria-modal="true" aria-label="Architecture diagram, full size">
-            <button class="lightbox-close" id="archClose" aria-label="Close">&times;</button>
+            <button class="lightbox-close" id="archClose" aria-label="Close"><i class="pi pi-times"></i></button>
             <img src="gtm-framework-architecture.png"
                  alt="GTM Framework architecture diagram, full size">
           </div>
@@ -1461,7 +1518,7 @@
         <!-- ============ CAMPAIGNS ============ -->
         <section class="section reveal" id="campaigns">
           <div class="section-header">
-            <div class="section-tag tag-yellow">Reproducibility</div>
+            <div class="section-tag">Reproducibility</div>
             <h2>Campaigns: how the framework runs N products</h2>
             <p>The framework is generic. Product specifics live in a folder of seven files per campaign. Switching between products is just switching which campaign the agents load at the start of a task.</p>
           </div>
@@ -1515,7 +1572,7 @@
         <!-- ============ SAFETY ============ -->
         <section class="section reveal" id="safety">
           <div class="section-header">
-            <div class="section-tag tag-red">Safety</div>
+            <div class="section-tag">Safety</div>
             <h2>Draft-and-confirm on every live send</h2>
             <p>The framework's core safety promise: no agent ever writes a message, starts a campaign, or spends meaningful Apollo credit without first printing a summary and waiting for a literal yes.</p>
           </div>
@@ -1556,7 +1613,7 @@
         <!-- ============ DAY 1 ============ -->
         <section class="section reveal" id="day1">
           <div class="section-header">
-            <div class="section-tag tag-green">Day 1</div>
+            <div class="section-tag">Day 1</div>
             <h2>First run on a new machine</h2>
             <p>If the framework is already installed on your Claude Code setup, skip to step 3. Otherwise walk all five.</p>
           </div>
@@ -1724,21 +1781,21 @@ open -a "Claude Code"</code></pre>
           <div class="cost-breakdown">
             <div class="cost-breakdown-label">Monthly spend distribution</div>
             <div class="cost-bar">
-              <div class="cost-bar-segment" style="width:45.1%; background: #f6a900;"></div>
-              <div class="cost-bar-segment" style="width:28%; background: #36a058;"></div>
-              <div class="cost-bar-segment" style="width:26.9%; background: #009cde;"></div>
+              <div class="cost-bar-segment" style="width:45.1%; background: var(--nevron-color-m3);"></div>
+              <div class="cost-bar-segment" style="width:28%; background: var(--nevron-color-m4);"></div>
+              <div class="cost-bar-segment" style="width:26.9%; background: var(--nevron-color-m5);"></div>
             </div>
             <div class="cost-bar-legend">
               <div class="cost-legend-item">
-                <span class="cost-legend-dot" style="background: #f6a900;"></span>
+                <span class="cost-legend-dot" style="background: var(--nevron-color-m3);"></span>
                 HeyReach ~79 USD (45%)
               </div>
               <div class="cost-legend-item">
-                <span class="cost-legend-dot" style="background: #36a058;"></span>
+                <span class="cost-legend-dot" style="background: var(--nevron-color-m4);"></span>
                 Apollo ~49 USD (28%)
               </div>
               <div class="cost-legend-item">
-                <span class="cost-legend-dot" style="background: #009cde;"></span>
+                <span class="cost-legend-dot" style="background: var(--nevron-color-m5);"></span>
                 Instantly ~47 USD (27%)
               </div>
               <div class="cost-legend-item">
@@ -1791,7 +1848,7 @@ open -a "Claude Code"</code></pre>
             <div class="troubleshoot-card">
               <div class="troubleshoot-q">Setup prompt cannot find Claude Code</div>
               <div class="troubleshoot-divider"></div>
-              <p class="troubleshoot-a">Coworker has not installed Claude Code yet. The setup prompt will say so explicitly. Install from <a href="https://docs.anthropic.com/en/docs/claude-code" style="color: var(--m5); text-decoration: underline;">docs.anthropic.com</a>, then re-run.</p>
+              <p class="troubleshoot-a">Coworker has not installed Claude Code yet. The setup prompt will say so explicitly. Install from <a href="https://docs.anthropic.com/en/docs/claude-code" style="color: var(--nevron-color-m3); text-decoration: underline;">docs.anthropic.com</a>, then re-run.</p>
             </div>
           </div>
 
@@ -1909,7 +1966,7 @@ open -a "Claude Code"</code></pre>
     <div class="modal">
       <div class="modal-header">
         <h3>Install prompt</h3>
-        <button class="modal-close" onclick="hideInstallModal()" aria-label="Close">&times;</button>
+        <button class="modal-close" onclick="hideInstallModal()" aria-label="Close"><i class="pi pi-times"></i></button>
       </div>
       <div class="modal-body">
         <p>Copy this prompt and paste it into a fresh Claude Code session. Claude audits your environment, installs any missing MCPs, clones the framework, copies agents and skills into <code>~/.claude/</code>, and registers your first campaign. It pauses for confirmation at every key decision.</p>
@@ -1927,7 +1984,7 @@ open -a "Claude Code"</code></pre>
     <div class="modal">
       <div class="modal-header">
         <h3>Update prompt</h3>
-        <button class="modal-close" onclick="hideUpdateModal()" aria-label="Close">&times;</button>
+        <button class="modal-close" onclick="hideUpdateModal()" aria-label="Close"><i class="pi pi-times"></i></button>
       </div>
       <div class="modal-body">
         <p>Use this after the framework repo changes. Claude fetches the latest commit, diffs every installed agent and skill against the repo version, backs up anything that differs, and re-syncs only the files that moved. Campaigns and local state are left untouched.</p>
