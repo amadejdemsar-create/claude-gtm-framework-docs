@@ -1118,10 +1118,19 @@
           <div class="install-bar">
             <div class="install-bar-text">
               <h3>Install the framework on this machine</h3>
-              <p>Copies a Claude Code prompt to your clipboard. Paste it into a new Claude Code session; Claude clones the framework, audits your existing MCPs, installs what is missing, and registers your first campaign.</p>
+              <p>Copies a Claude Code prompt to your clipboard. Paste into a new Claude Code session; Claude clones the framework, audits your existing MCPs, installs what is missing, and registers your first campaign.</p>
             </div>
             <button class="btn-install" id="install-btn" onclick="copyInstallPrompt()">Copy install prompt</button>
-            <button class="btn-secondary" onclick="showModal()">Preview prompt</button>
+            <button class="btn-secondary" onclick="showInstallModal()">Preview</button>
+          </div>
+
+          <div class="install-bar">
+            <div class="install-bar-text">
+              <h3>Update an existing installation</h3>
+              <p>Already installed? Copies an update prompt. Paste into Claude Code; it pulls the latest from the private repo, diffs your local agents, skills, and framework docs, backs up anything changed, and re-syncs only what moved.</p>
+            </div>
+            <button class="btn-install" id="update-btn" onclick="copyUpdatePrompt()">Copy update prompt</button>
+            <button class="btn-secondary" onclick="showUpdateModal()">Preview</button>
           </div>
 
           <div class="tldr-grid">
@@ -1896,19 +1905,37 @@ open -a "Claude Code"</code></pre>
   </script>
 
   <!-- ============ INSTALL PROMPT MODAL ============ -->
-  <div class="modal-overlay" id="installModal" onclick="if(event.target===this)hideModal()">
+  <div class="modal-overlay" id="installModal" onclick="if(event.target===this)hideInstallModal()">
     <div class="modal">
       <div class="modal-header">
         <h3>Install prompt</h3>
-        <button class="modal-close" onclick="hideModal()" aria-label="Close">&times;</button>
+        <button class="modal-close" onclick="hideInstallModal()" aria-label="Close">&times;</button>
       </div>
       <div class="modal-body">
-        <p>Copy this prompt and paste it into a fresh Claude Code session. Claude will audit your environment, install any missing MCPs, clone the framework, copy agents and skills into <code>~/.claude/</code>, and register your first campaign. It pauses for confirmation at every key decision.</p>
-        <pre id="prompt-text"></pre>
+        <p>Copy this prompt and paste it into a fresh Claude Code session. Claude audits your environment, installs any missing MCPs, clones the framework, copies agents and skills into <code>~/.claude/</code>, and registers your first campaign. It pauses for confirmation at every key decision.</p>
+        <pre id="install-prompt-text"></pre>
       </div>
       <div class="modal-footer">
-        <button class="btn-secondary" onclick="hideModal()">Close</button>
-        <button class="btn-install" onclick="copyInstallPrompt(); hideModal();">Copy to clipboard</button>
+        <button class="btn-secondary" onclick="hideInstallModal()">Close</button>
+        <button class="btn-install" onclick="copyInstallPrompt(); hideInstallModal();">Copy to clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ UPDATE PROMPT MODAL ============ -->
+  <div class="modal-overlay" id="updateModal" onclick="if(event.target===this)hideUpdateModal()">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Update prompt</h3>
+        <button class="modal-close" onclick="hideUpdateModal()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Use this after the framework repo changes. Claude fetches the latest commit, diffs every installed agent and skill against the repo version, backs up anything that differs, and re-syncs only the files that moved. Campaigns and local state are left untouched.</p>
+        <pre id="update-prompt-text"></pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="hideUpdateModal()">Close</button>
+        <button class="btn-install" onclick="copyUpdatePrompt(); hideUpdateModal();">Copy to clipboard</button>
       </div>
     </div>
   </div>
@@ -2082,51 +2109,164 @@ Print:
 
 Start with step 1.`;
 
-    async function copyInstallPrompt() {
-      const btn = document.getElementById('install-btn');
-      const original = btn.textContent;
+    function copyInstallPrompt() { return copyToClipboard(INSTALL_PROMPT, 'install-btn'); }
 
+    const UPDATE_PROMPT = `I already have the Claude GTM Framework installed, and I want to pull the latest changes from the private repo. Update any agent, skill, or framework doc that has changed, leaving my campaigns and local state untouched.
+
+The framework source is at https://github.com/amadejdemsar-create/claude-gtm-framework (PRIVATE, collaborator access required).
+
+Follow these steps. CONFIRM before overwriting anything.
+
+== STEP 1: VERIFY EXISTING INSTALL ==
+
+Check that these exist:
+    ls ~/.claude/agents/ | grep '^gtm-'
+    ls ~/.claude/skills/ | grep '^gtm-'
+    ls ~/.claude/gtm-framework/
+    jq '.mcpServers | keys' ~/.claude.json | grep -E 'apollo-io|instantly|attio|heyreach'
+
+If nothing matches, stop and tell me: "Framework is not installed yet. Run the install prompt from https://amadejdemsar-create.github.io/claude-gtm-framework-docs/ instead." Do not continue.
+
+Record current counts:
+    AGENT_COUNT=$(ls ~/.claude/agents/ | grep -c '^gtm-')
+    SKILL_COUNT=$(ls ~/.claude/skills/ | grep -c '^gtm-')
+
+== STEP 2: FETCH LATEST ==
+
+    rm -rf /tmp/claude-gtm-framework
+    git clone https://github.com/amadejdemsar-create/claude-gtm-framework.git /tmp/claude-gtm-framework
+
+If 404 or auth error, stop and tell me to re-verify my collaborator access.
+
+Capture the commit hash of what we just cloned:
+    REMOTE_SHA=$(git -C /tmp/claude-gtm-framework rev-parse HEAD)
+    echo "Remote HEAD: $REMOTE_SHA"
+
+If ~/.claude/gtm-framework/.installed_sha exists, show me the previously-installed sha. Otherwise note "first update."
+
+== STEP 3: DIFF LOCAL vs REPO ==
+
+Compute what changed, per file class. Do not overwrite yet.
+
+3a. Agents:
+    For each file in /tmp/claude-gtm-framework/agents/*.md:
+      - If not present in ~/.claude/agents/ -> mark "NEW agent"
+      - If present and identical (diff -q returns no output) -> mark "unchanged"
+      - If present and different -> mark "CHANGED agent" and show a diff summary (git diff --no-index --stat)
+
+3b. Skills:
+    For each folder in /tmp/claude-gtm-framework/skills/gtm-*:
+      - If not present in ~/.claude/skills/ -> mark "NEW skill"
+      - If SKILL.md identical -> "unchanged"
+      - If SKILL.md different -> "CHANGED skill" with diff stat
+
+3c. Framework docs:
+    diff -r /tmp/claude-gtm-framework/gtm-framework ~/.claude/gtm-framework
+    Summarise which files moved.
+
+3d. Campaign template:
+    Only report changes. Do NOT touch existing campaign folders; those are user data.
+
+Present a single summary block:
+    | Class     | NEW | CHANGED | UNCHANGED |
+    | Agents    | N   | N       | N         |
+    | Skills    | N   | N       | N         |
+    | Framework | N   | N       | N         |
+
+List each NEW and CHANGED file by name.
+
+== STEP 4: CONFIRM ==
+
+Ask me: "Proceed with update? (yes / no / show full diff of <file>)"
+
+On "show full diff of <name>", print the diff and re-ask.
+
+On "no", stop. Nothing is overwritten. /tmp clone remains for later inspection.
+
+On "yes", continue.
+
+== STEP 5: BACKUP ==
+
+For each CHANGED file, back up the current version before overwriting:
+    TS=$(date +%Y%m%d-%H%M%S)
+    mkdir -p ~/.claude/gtm-framework/.backups/$TS/{agents,skills,framework}
+    cp <each-changed-file> ~/.claude/gtm-framework/.backups/$TS/<matching-path>
+
+Print the backup directory path.
+
+== STEP 6: APPLY ==
+
+Copy only NEW and CHANGED files:
+  - Agents: cp for each marked new/changed into ~/.claude/agents/
+  - Skills: cp -r for new skill folders, cp for changed SKILL.md inside existing folders
+  - Framework docs: cp for README.md, framework-map.md, setup-audit.md if changed
+  - Campaign template: cp -r /tmp/claude-gtm-framework/gtm-framework/campaign-template/ ~/.claude/gtm-framework/ if changed
+
+Record the new installed sha:
+    echo "$REMOTE_SHA" > ~/.claude/gtm-framework/.installed_sha
+
+== STEP 7: MCP CHECK ==
+
+Compare the list of MCPs the current version expects (read /tmp/claude-gtm-framework/gtm-framework/setup-audit.md section "Phase C") against my ~/.claude.json.
+
+If setup-audit.md added a new required MCP that I do not have, flag it and offer to walk me through adding it. Do not add silently.
+
+== STEP 8: VERIFY ==
+
+    ls ~/.claude/agents/ | grep -c '^gtm-'
+    ls ~/.claude/skills/ | grep -c '^gtm-'
+
+Report:
+    "Updated to $REMOTE_SHA.
+     Agents: <before> -> <after>
+     Skills: <before> -> <after>
+     Backups: ~/.claude/gtm-framework/.backups/$TS/
+     Restart Claude Code so new agents and skills load.
+     Full changelog: https://github.com/amadejdemsar-create/claude-gtm-framework/commits/main"
+
+Start with step 1.`;
+
+    async function copyToClipboard(text, btnId) {
+      const btn = document.getElementById(btnId);
+      const original = btn.textContent;
       try {
-        await navigator.clipboard.writeText(INSTALL_PROMPT);
+        await navigator.clipboard.writeText(text);
         btn.textContent = 'Copied';
         btn.classList.add('success');
-        setTimeout(() => {
-          btn.textContent = original;
-          btn.classList.remove('success');
-        }, 2500);
       } catch (err) {
         const ta = document.createElement('textarea');
-        ta.value = INSTALL_PROMPT;
+        ta.value = text;
         document.body.appendChild(ta);
         ta.select();
-        try {
-          document.execCommand('copy');
-          btn.textContent = 'Copied';
-          btn.classList.add('success');
-        } catch {
-          btn.textContent = 'Copy failed';
-          btn.classList.add('error');
-        }
+        try { document.execCommand('copy'); btn.textContent = 'Copied'; btn.classList.add('success'); }
+        catch { btn.textContent = 'Copy failed'; btn.classList.add('error'); }
         document.body.removeChild(ta);
-        setTimeout(() => {
-          btn.textContent = original;
-          btn.classList.remove('success', 'error');
-        }, 2500);
       }
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove('success', 'error');
+      }, 2500);
     }
 
-    function showModal() {
-      document.getElementById('prompt-text').textContent = INSTALL_PROMPT;
+    function copyUpdatePrompt() { return copyToClipboard(UPDATE_PROMPT, 'update-btn'); }
+
+    function showInstallModal() {
+      document.getElementById('install-prompt-text').textContent = INSTALL_PROMPT;
       document.getElementById('installModal').classList.add('show');
     }
-    function hideModal() {
-      document.getElementById('installModal').classList.remove('show');
+    function hideInstallModal() { document.getElementById('installModal').classList.remove('show'); }
+    function showUpdateModal() {
+      document.getElementById('update-prompt-text').textContent = UPDATE_PROMPT;
+      document.getElementById('updateModal').classList.add('show');
     }
+    function hideUpdateModal() { document.getElementById('updateModal').classList.remove('show'); }
+
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        const m = document.getElementById('installModal');
-        if (m && m.classList.contains('show')) hideModal();
-      }
+      if (e.key !== 'Escape') return;
+      const im = document.getElementById('installModal');
+      const um = document.getElementById('updateModal');
+      if (im && im.classList.contains('show')) hideInstallModal();
+      if (um && um.classList.contains('show')) hideUpdateModal();
     });
   </script>
 
